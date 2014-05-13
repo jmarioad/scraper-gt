@@ -9,7 +9,7 @@ class BillInfo < StorageableInfo
 		super()
 		@model = 'bills'
 		@id = ''
-		@last_update = HTTParty.get('http://billit.ciudadanointeligente.org/bills/last_update').body
+		@last_update = HTTParty.get('http://billit.congresoabierto.gt/bills/last_update').body
 		# @last_update = "30/12/2013"
 		@update_location = 'http://www.senado.cl/wspublico/tramitacion.php?fecha='
 		# 
@@ -19,7 +19,7 @@ class BillInfo < StorageableInfo
 	end
 
 	def doc_locations
-		bulletins = 5043.downto(4214) #until 2009
+		bulletins = 5043.downto(4214) #until 2009 / 
 		bulletins.map {|b| @location + b.to_s}
 	end
 
@@ -27,7 +27,7 @@ class BillInfo < StorageableInfo
 		result_code = HTTParty.get([@API_url, @model, @id].join("/"), headers: {"Accept"=>"*/*"}).code
 		if result_code == 200
 			puts "-------- 200 ---------"
-			put bill
+      put bill
 		else
 			puts "-------- 404 ---------"
 			post bill
@@ -53,7 +53,9 @@ class BillInfo < StorageableInfo
 		bill.title = info[:title]
     bill.creation_date = info[:creation_date]
 		bill.bill_draft_link = info[:bill_draft_link]
+    bill.authors = info[:authors]
 		@id = info[:uid]
+    #p bill
 		bill
 	end
 
@@ -66,6 +68,7 @@ class BillInfo < StorageableInfo
     creation_date = html.xpath(base_xpath+'//tr/td/font[2]/text()').text().gsub(/\s+/, "")
     info[:creation_date] = Date.strptime(creation_date.to_s, '%d/%m/%Y') if html.xpath(base_xpath+'//tr/td/font[2]/text()')
 		info[:bill_draft_link] = html.xpath(base_xpath+'//tr/td/a/@href').text() if html.xpath(base_xpath+'//tr/td/a/@href').text()
+    info[:authors] = html.xpath(base_xpath+'//tr/td/font[3]/text()').text() if html.xpath(base_xpath+'//tr/td/font[3]/text()').text()
 		info
   end
 
