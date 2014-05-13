@@ -43,19 +43,16 @@ class BillInfo < StorageableInfo
 	end
 
 	def format info
-		bill = Billit::Bill.new
-
-		authors = info[:authors].split(/,|y/).map{|x| x.strip} if info[:authors]
-		#subject_areas = info[:subject_areas].map{|x| x.values}.flatten if info[:subject_areas]
-		#merged_bills = info[:merged_bills].split('/') if info[:merged_bills]
-
-		bill.uid = info[:uid]
-		bill.title = info[:title]
+		authors = info[:authors].split(/,| y /).map{|x| x.strip} if info[:authors]
+    
+    bill = Billit::Bill.new
+    bill.uid = info[:uid]
+    bill.title = info[:title]
     bill.creation_date = info[:creation_date]
-		bill.bill_draft_link = info[:bill_draft_link]
+    bill.bill_draft_link = info[:bill_draft_link]
     bill.authors = authors
 		@id = info[:uid]
-    #p bill
+    
 		bill
 	end
 
