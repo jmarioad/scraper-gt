@@ -60,7 +60,7 @@ class BillInfo < StorageableInfo
 		info = Hash.new
 		html = Nokogiri::HTML(doc)
     base_xpath = '//html/body/table/tr/td/table/tr[2]/td/table/tr/td[2]/div[3]/table'
-		info[:uid] = html.xpath(base_xpath+'//tr/td/font[1]/text()').text().to_s.gsub(/\s+/, "").gsub(/[^0-9]/, "")[1,10] if html.xpath(base_xpath+'//tr/td/font[1]/text()')
+		info[:uid] = html.xpath(base_xpath+'//tr/td/font[1]/text()').text().to_s.gsub(/\s+/, "").gsub(/[^0-9]/, "") if html.xpath(base_xpath+'//tr/td/font[1]/text()')
 		info[:title] = html.xpath(base_xpath+'//tr/td/font[5]/text()').text().to_s if html.xpath(base_xpath+'//tr/td/font[5]/text()')
     creation_date = html.xpath(base_xpath+'//tr/td/font[2]/text()').text().gsub(/\s+/, "")
     info[:creation_date] = Date.strptime(creation_date.to_s, '%d/%m/%Y') if html.xpath(base_xpath+'//tr/td/font[2]/text()')
